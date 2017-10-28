@@ -1,0 +1,46 @@
+body  { background-color:white; font-family:Arial; padding:0px; margin:0px; }
+
+/* title */
+h1.title { color:white;
+           padding:0.1em; margin-bottom:20px; margin-top:0.3em;
+           text-align:center;
+           font-variant:small-caps; } 
+
+/* body text */
+div.body { color:black; padding:5px; margin-left:10px; margin-bottom:10px;}
+
+.body a { color: navy; font-weight:bold; text-decoration:none; }
+.body a:hover { color:lightblue; }
+.body a:active { color:red; }
+
+/* header */
+div.head { background-color:navy; width:100%; margin:0px; padding-top:10px; padding-bottom:0px; }
+
+/* menu */
+div.menu { background-color:navy; padding-left:2px; padding:8px; }
+.tab, .selected_tab, .atab { padding:8px; margin-left:4px; border-top-right-radius:8px; border-top-left-radius:8px; } 
+.tab { background-color:#0033CC; padding-bottom:9px; }
+.tab a { color:white; text-decoration:none; padding:8px; }
+.tab:hover { background-color:white; }
+.tab:hover a { color:black; text-decoration:underline; }
+.selected_tab, .atab { background-color:white; color:black; padding-bottom:9px; }
+.atab { margin-left:0px; }
+.atab a { color:#0033CC; text-decoration:none; padding:8px; font-weight: bold }
+.atab:hover { background-color:#0033CC; color: white; }
+.atab:hover a { color: white; }
+
+/* List table */
+table.list { text-align:left; border-collapse:collapse; border-color:navy; width:100%; }
+table.list tr { padding:0px; }
+table.list tr:nth-child(odd) { background-color:#99CCFF;}
+table.list td {  padding-left:10px; padding-top:2px; }
+table.list th {  padding:10px; font-weight:normal; }
+
+/* totals */
+.totals { font-size:80%; font-style:italic;}
+
+
+/* Invisible table */
+table.inv { border-width:0px; padding:10px }
+
+
