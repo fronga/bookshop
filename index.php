@@ -27,11 +27,11 @@
     } else {
       echo '<SPAN class="selected_tab">';
     }
-    echo 'Liste des '.$itab;
+    echo ucfirst($itab);
     if ( $view != $itab ) echo '</A>';
     echo '</SPAN>';
     if ( $view == $itab ) {
-      echo '<SPAN class="atab"><A HREF="add.php?view='.$itab.'">+</A></SPAN>';      
+      echo '<SPAN class="atab"><A onclick="window.open(\'add.php?view='.$itab.'\');">+</A></SPAN>';      
     }
   }
   echo '</DIV>'; # End menu
