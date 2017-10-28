@@ -38,7 +38,7 @@
   echo '</DIV>'; # End header
   echo '<DIV class="body">';
   echo '<TABLE class="list">';  
-  include "view-".$view.".php";
+  include "view_".$view.".php";
   
 ?>
 </TABLE>

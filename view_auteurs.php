@@ -5,7 +5,7 @@ $fields = array(
     "Nom" => 'nom_complet',
     "#(livres)" => 'nb_livres'
 );
-$query = "SELECT nom_complet, count(livres.id) AS nb_livres FROM `auteurs`
+$query = "SELECT `auteurs`.id, `auteurs`.nom_complet, count(livres.id) AS nb_livres FROM `auteurs`
  LEFT JOIN livres ON livres.fk_auteur_id = auteurs.id GROUP BY auteurs.id;";
   
 $mysqli = $GLOBALS['mysqli'];
@@ -51,7 +51,7 @@ print "</TR>\n";
 $iauthor = 0; 
 foreach ( $authors as $author ) {
     print '<TR><TD>'.++$iauthor.'</TD>';
-    print '<TD><A HREF="javascript:show_auteur('.$author->nom_complet.')">'.$author->nom_complet."</A></TD>";
+    print '<TD><A HREF="javascript:show('.$author->id.', \'auteur\')">'.$author->nom_complet."</A></TD>";
     print "<TD>".$author->nb_livres."</TD></TR>\n";
 }
 
