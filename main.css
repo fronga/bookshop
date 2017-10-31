@@ -7,7 +7,7 @@ h1.title { color:white;
            font-variant:small-caps; } 
 
 /* body text */
-div.body { color:black; padding:5px; margin-left:10px; margin-bottom:10px;}
+div.body { color:black; padding:5px; margin:10px; }
 
 .body a { color: navy; font-weight:bold; text-decoration:none; }
 .body a:hover { color:lightblue; }
