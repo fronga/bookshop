@@ -7,6 +7,7 @@
 <html>
  <head>
   <title>Ajouter/modifier une commande</title>
+  <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
   <script src="jquery/jquery-1.12.4.js"></script>
   <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
@@ -15,6 +16,12 @@
     $( function() {
       $( "#datepicker" ).datepicker();
     } );
+    $( function() {
+      $( ".widget button" ).button( {
+          icon: "ui-icon-gear",
+          showLabel: false
+        } ).end();
+    } );
   </script>
  </head>
  <body>
@@ -22,10 +29,11 @@
   <?php
     // TODO: Load data if modifying existing order
     if (array_key_exists("commande", $_GET)) {
-      $query = "SELECT c.date, c.fk_fournisseur_nom, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
+      $query = "SELECT c.date, f.nom, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
       $query .= " LEFT JOIN livres AS l ON lc.fk_livre_id = l.id";
       $query .= " LEFT JOIN auteurs AS a ON l.fk_auteur_id = a.id";
       $query .= " LEFT JOIN commande AS c ON c.id = lc.fk_commande_id";
+      $query .= " LEFT JOIN fournisseur AS f ON f.id = c.fk_fournisseur_id";
       $query .= " WHERE lc.fk_commande_id = ".$_GET["commande"];
       $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
       $com = $result->fetch_object();
@@ -44,23 +52,27 @@
     <table class="form" id="tbl_commande">
       <tr>
         <td>
-          <select name='fournisseur'>
-          <?php 
-            foreach ($fournisseurs as $f) {
-              print "<OPTION ".($com && ($f->nom == $com->fk_fournisseur_nom) ? "SELECTED " : "");
-              print "VALUE=".$f->id.">".$f->nom."</OPTION>"; 
-            } 
-          ?>
-          </select>
-        </td>
-        <td>
-          <input name='date' type='text' id='datepicker' <?php print $com ? "value=".$com->date : ""; ?>>
+          <fieldset>
+            <legend>Fournisseur / date&nbsp;:</legend>
+            <select name='fournisseur'>
+            <?php 
+              foreach ($fournisseurs as $f) {
+                print "<OPTION ".($com && ($f->nom == $com->fk_fournisseur_nom) ? "SELECTED " : "");
+                print "VALUE=".$f->id.">".$f->nom."</OPTION>"; 
+              } 
+            ?>
+            </select>
+            <input name='date' type='text' size='10' id='datepicker' <?php print $com ? "value=".$com->date : "";?>>
+            <input name='remise_incluse' type='checkbox'><label>Remise incluse</label>
+          </fieldset>
         </td>
       </tr>
     </table>
     <table class="form" id="tbl_livres">
       <tbody class="rowContainer">
         <tr class="cloningInput">
+          <td id="count">1.</td>
+          <td><input name="source_id" size=10 placeholder="ID"></td>
           <td>
             <?php
                 $query = "SELECT id, nom_complet FROM auteurs";
@@ -73,20 +85,44 @@
                 echo "<select id='livre_0' name='livre_0'><option value='null'>--</option></select>";
             ?>
           </td>
+          <td><input name="prix" type="number" placeholder="Prix" min=0.10 max=100 step=0.01 style="width: 7em"></td>
+          <td>
+            <select name="monnaie">
+              <option value="eur" selected>EUR</option>
+              <option value="chf">CHF</option>
+            </select>
+          </td>
+          <td>
+              <input name="remise" type="number" placeholder="%" min=0 max=100 step=5 style="width: 5em">
+          </td>
+          <td>
+            <input name="quantite" type="number" placeholder="Qté" min=1 max=100 style="width: 5em">
+          </td>
+          <td>  
+            <select name="taxe">
+              <option value="0.55" selected>5.5%</option>
+              <option value="0.2">20%</option>
+            </select>
+          </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td>
-            <button type="button" class="clone" onclick="clone()"></button>
+          <td colspan="2">
+            <button type="button" class="clone" onclick="clone()">
+              + Ajouter
+            </button>
           </td>
-          <td>
-            <button type="button" class="remove"></button>
+          <td colspan="2">
+            <button type="button" class="remove" onclick="remove()">
+              - Supprimer
+            </button>
           </td>
         </tr>
         <tr>
-          <td colspan="2">
-            <input type="submit" value="Submit"><input type="reset" value="Reset" onclick="resetForm">
+          <td class="submit" colspan="3">
+            <button type="submit" value="Submit" class="ui-button ui-widget ui-corner-all">Submit</button>
+            <button type="reset" value="Reset" class="ui-button ui-widget ui-corner-all" onclick="resetForm">Reset</button>
           </td>
         </tr>
       </tfoot>

@@ -36,11 +36,17 @@ table.list tr:nth-child(odd) { background-color:#99CCFF;}
 table.list td {  padding-left:10px; padding-top:2px; }
 table.list th {  padding:10px; font-weight:normal; }
 
+/* Form styles */
+table.form { padding-bottom: 20px; }
+table.form thead { text-align:center; font-size: smaller; }
+table.form tfoot td { padding-top: 20px; }
+table.form .submit { text-align: center; }
+#tbl_commande select { font-size: large; }
+table.form label { font-size:small; }
+
 /* totals */
 .totals { font-size:80%; font-style:italic;}
 
-
 /* Invisible table */
 table.inv { border-width:0px; padding:10px }
-
 
