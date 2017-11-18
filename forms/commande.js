@@ -16,7 +16,6 @@ $('.select_auteur').ready(function () {
 function getAuthors(element) {
   // Get list of authors dynamically
   // Argument: the select element to fill
-  console.log("getAuthors called");
   var xhr = getXHR();  // The variable that makes Ajax possible!
   if (!xhr) { return false; }
   xhr.onreadystatechange = function () {
@@ -107,7 +106,6 @@ function validateForm() {
       if (match = item.name.match(cregex)) {
         form["commande"][match[1]] = item.value;
       } else if (match = item.name.match(lregex)) {
-        console.log(match[1] + ", " + match[2]);
         if (form.livres[match[1]]) {
           form.livres[match[1]][match[2]] = item.value;
         } else {
@@ -117,8 +115,7 @@ function validateForm() {
       }
     }
   );
-  // console.log(form);
-
+  
   // Validate commande fields
   var cerrors = "";
   ["fournisseur", "date", "frais"].forEach(
@@ -159,7 +156,6 @@ function validateForm() {
     }
   }
   if (error_list.length > 0) {
-    console.log(error_list.length);
     alert(error_list.join("\n"));
     return false;
   }

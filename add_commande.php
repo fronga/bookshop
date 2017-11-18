@@ -29,14 +29,17 @@
   <?php
     // TODO: Load data if modifying existing order
     if (array_key_exists("commande", $_GET)) {
-      $query = "SELECT c.date, f.nom, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
-      $query .= " LEFT JOIN livres AS l ON lc.fk_livre_id = l.id";
-      $query .= " LEFT JOIN auteurs AS a ON l.fk_auteur_id = a.id";
-      $query .= " LEFT JOIN commande AS c ON c.id = lc.fk_commande_id";
-      $query .= " LEFT JOIN fournisseur AS f ON f.id = c.fk_fournisseur_id";
-      $query .= " WHERE lc.fk_commande_id = ".$_GET["commande"];
+      $query = "SELECT * from `commande` WHERE id = ".$_GET["commande"];
       $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
       $com = $result->fetch_object();
+      $result->close();
+
+      $query = "SELECT l.titre, a.nom_complet, lc.* FROM livre_commande AS lc";
+      $query .= " LEFT JOIN livres AS l ON lc.fk_livre_id = l.id";
+      $query .= " LEFT JOIN auteurs AS a ON l.fk_auteur_id = a.id";
+      $query .= " WHERE lc.fk_commande_id = ".$_GET["commande"];
+      $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
+      $livres = $result->fetch_object();
       $result->close();
     }
 
@@ -64,12 +67,14 @@
             </select>
             <input name='commande[date]' type='text' size='10' id='datepicker' <?php print $com ? "value=".$com->date : "";?>>
             <br>
-            <input name="commande[frais]" type="number" placeholder="Frais" min=0.00 max=100 step=0.01 style="width: 7em">
+            <input name="commande[frais]" type="number" placeholder="Frais" min=0.00 max=100 step=0.01 style="width: 7em" 
+            <?php print $com ? "value=".$com->frais : "";?>>
             <select name="commande[monnaie]">
-              <option value="eur" selected>EUR</option>
-              <option value="chf">CHF</option>
+              <option value="eur" <?php print ($com && $com->monnaie == "CHF") ? "" : "selected" ?>>EUR</option>
+              <option value="chf" <?php print ($com && $com->monnaie == "CHF") ? "selected" : "" ?>>CHF</option>
             </select>
-            <input name='commande[remise_incluse]' type='checkbox'><label>Remise incluse</label>
+            <input name='commande[remise_incluse]' type='checkbox' <?php print ($com && $com->remise_incluse) ? "checked" : "" ?>>
+                <label>Remise incluse</label>
           </fieldset>
         </td>
       </tr>
