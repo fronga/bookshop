@@ -48,13 +48,13 @@
     }
     $result->close();
   ?>
-  <form method=post id="bookForm" action="add-check.php">
+  <form method=post id="bookForm" action="add-check.php" onsubmit="return validateForm()">
     <table class="form" id="tbl_commande">
       <tr>
         <td>
           <fieldset>
             <legend>Fournisseur / date&nbsp;:</legend>
-            <select name='fournisseur'>
+            <select name='commande[fournisseur]'>
             <?php 
               foreach ($fournisseurs as $f) {
                 print "<OPTION ".($com && ($f->nom == $com->fk_fournisseur_nom) ? "SELECTED " : "");
@@ -62,8 +62,14 @@
               } 
             ?>
             </select>
-            <input name='date' type='text' size='10' id='datepicker' <?php print $com ? "value=".$com->date : "";?>>
-            <input name='remise_incluse' type='checkbox'><label>Remise incluse</label>
+            <input name='commande[date]' type='text' size='10' id='datepicker' <?php print $com ? "value=".$com->date : "";?>>
+            <br>
+            <input name="commande[frais]" type="number" placeholder="Frais" min=0.00 max=100 step=0.01 style="width: 7em">
+            <select name="commande[monnaie]">
+              <option value="eur" selected>EUR</option>
+              <option value="chf">CHF</option>
+            </select>
+            <input name='commande[remise_incluse]' type='checkbox'><label>Remise incluse</label>
           </fieldset>
         </td>
       </tr>
@@ -75,31 +81,22 @@
           <td><input name="source_id" size=10 placeholder="ID"></td>
           <td>
             <?php
-                $query = "SELECT id, nom_complet FROM auteurs";
-                $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
-                echo "<select class='select_auteur' id='auteur_0' name='auteur_0' 
+                echo "<select class='select_auteur' name='livre[0][auteur]' 
                       onload=\"getAuthors(this)\" onchange=\"getAuthorBooks(this)\">";
-                echo "<option value='null'></option></select>";
+                echo "<option value=''></option></select>";
                 echo "</select>";
-                // Book drop-down
-                echo "<select id='livre_0' name='livre_0'><option value='null'>--</option></select>";
+                echo "<select name='livre[0][titre]'><option value=''>--</option></select>";
             ?>
           </td>
-          <td><input name="prix" type="number" placeholder="Prix" min=0.10 max=100 step=0.01 style="width: 7em"></td>
+          <td><input name="livre[0][prix]" type="number" placeholder="Prix" min=0 max=100 step=0.01 style="width: 7em"></td>
           <td>
-            <select name="monnaie">
-              <option value="eur" selected>EUR</option>
-              <option value="chf">CHF</option>
-            </select>
+              <input name="livre[0][remise]" type="number" placeholder="%" min=0 max=100 step=5 style="width: 5em">
           </td>
           <td>
-              <input name="remise" type="number" placeholder="%" min=0 max=100 step=5 style="width: 5em">
-          </td>
-          <td>
-            <input name="quantite" type="number" placeholder="Qté" min=1 max=100 style="width: 5em">
+            <input name="livre[0][quantite]" type="number" placeholder="Qté" min=1 max=100 style="width: 5em">
           </td>
           <td>  
-            <select name="taxe">
+            <select name="livre[0][taxe]">
               <option value="0.55" selected>5.5%</option>
               <option value="0.2">20%</option>
             </select>

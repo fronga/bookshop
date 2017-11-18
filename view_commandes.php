@@ -2,15 +2,15 @@
 
 // Get list of commandes and books
 $fields = array(
-    "Commande" => 'nom_commande',
+    "Commande" => 'date',
     "Auteur" => 'nom_complet',
     "Titre" => 'titre',
     "Quantité" => 'quantite'
 );
-$query = "SELECT c.nom_commande, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
+$query = "SELECT c.id, c.date, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
 $query .= " LEFT JOIN livres AS l ON lc.fk_livre_id = l.id";
 $query .= " LEFT JOIN auteurs AS a ON l.fk_auteur_id = a.id";
-$query .= " LEFT JOIN commande AS c ON c.nom_commande = lc.fk_commande_id";
+$query .= " LEFT JOIN commande AS c ON c.id = lc.fk_commande_id";
 
 $mysqli = $GLOBALS['mysqli'];
 

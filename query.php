@@ -2,7 +2,7 @@
   include("defines.inc");
   $table = $_GET['table'];
   if ($table == "auteurs") {
-    $query = "SELECT id, nom_complet FROM auteurs";    
+    $query = "SELECT * FROM auteurs ORDER BY nom";    
   } elseif ($table == "livres") {
     $id_auteur = $mysqli->real_escape_string($_GET['id']);
     $query = "SELECT id, titre FROM livres WHERE fk_auteur_id = ".$id_auteur;
@@ -13,6 +13,6 @@
     $response[] = $answer;
   }
   $result->close();
-echo json_encode($response);
+  echo json_encode($response);
 ?>
 
