@@ -1,6 +1,13 @@
 <?php
   include("defines.inc");
-  include("display.inc");
+  // Versatile sorting function
+  // Call with: usort($array, build_sorter('key','order'));
+  function build_sorter($key,$order) {
+    return function ($a, $b) use ($key,$order) {
+      if ( !$order ) return strnatcmp($a->$key, $b->$key);
+      else return strnatcmp($b->$key, $a->$key);
+    };
+  }
   ?> 
 
 <!DOCTYPE HTML>
