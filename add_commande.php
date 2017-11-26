@@ -29,7 +29,7 @@
   <?php
     // TODO: Load data if modifying existing order
     if (array_key_exists("commande", $_GET)) {
-      $query = "SELECT * from `commande` WHERE id = ".$_GET["commande"];
+      $query = "SELECT * from `commandes` WHERE id = ".$_GET["commande"];
       $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
       $com = $result->fetch_object();
       $result->close();
@@ -44,7 +44,7 @@
     }
 
     // Load data from fournisseurs
-    $query = "SELECT * FROM fournisseur";
+    $query = "SELECT * FROM fournisseurs";
     $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
     while ($answer = $result->fetch_object()) {
         $fournisseurs[] = $answer;
@@ -83,7 +83,7 @@
       <tbody class="rowContainer">
         <tr class="cloningInput">
           <td id="count">1.</td>
-          <td><input name="source_id" size=10 placeholder="ID"></td>
+          <td><input name="livre[0][src_id]" size=10 placeholder="ID"></td>
           <td>
             <?php
                 echo "<select class='select_auteur' name='livre[0][auteur]' 
@@ -102,7 +102,7 @@
           </td>
           <td>  
             <select name="livre[0][taxe]">
-              <option value="0.55" selected>5.5%</option>
+              <option value="0.055" selected>5.5%</option>
               <option value="0.2">20%</option>
             </select>
           </td>

@@ -7,10 +7,12 @@ $fields = array(
     "Titre" => 'titre',
     "Quantité" => 'quantite'
 );
-$query = "SELECT c.id, c.date, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
+$query = "SELECT c.id, c.date, c.frais, f.nom AS fournisseur, l.titre, a.nom_complet, lc.quantite FROM livre_commande AS lc";
 $query .= " LEFT JOIN livres AS l ON lc.fk_livre_id = l.id";
 $query .= " LEFT JOIN auteurs AS a ON l.fk_auteur_id = a.id";
-$query .= " LEFT JOIN commande AS c ON c.id = lc.fk_commande_id";
+$query .= " LEFT JOIN commandes AS c ON c.id = lc.fk_commande_id";
+$query .= " LEFT JOIN fournisseurs AS f ON c.fk_fournisseur_id = f.id";
+$query .= " ORDER BY date DESC";
 
 $mysqli = $GLOBALS['mysqli'];
 
@@ -54,8 +56,8 @@ print "</TR>\n";
 
 $ilivre = 0; 
 foreach ( $livres_commande as $livre ) {
-    print '<TR><TD>'.++$ilivre.'</TD>';
-    print '<TD>'.$livre->nom_commande.'</TD>';
+    print '<TR><TD>'.$livre->id.'</TD>';
+    print '<TD>'.$livre->fournisseur.' / '.$livre->date.'</TD>';
     print '<TD>'.$livre->nom_complet.'</TD>';
     print '<TD><I>'.$livre->titre."</I></TD>";
     print "<TD ALIGN=\"RIGHT\">".$livre->quantite."</TD></TR>\n";
