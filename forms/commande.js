@@ -118,7 +118,7 @@ function validateForm() {
   
   // Validate commande fields
   var cerrors = "";
-  ["fournisseur", "date", "frais"].forEach(
+  ["fk_fournisseur_id", "date", "frais"].forEach(
     function (field) {
       if (!form.commande[field]) {
         if (!cerrors) {
@@ -138,7 +138,7 @@ function validateForm() {
   var error_list = [];
   for (var i = 0; i < form.livres.length; ++i) {
     var lerrors = "";
-    ["titre", "auteur", "prix", "remise", "quantite"].forEach(
+    ["fk_livre_id", "fk_auteur_id", "prix_achat_ht", "remise", "quantite"].forEach(
       function (field) {
         if (!form.livres[i][field]) {
           if (error_list.length == 0) {

@@ -1,9 +1,10 @@
 <?php
-  include("defines.inc");
+  require_once("defines.inc");
+  require_once("commandes.inc");
 
   if (array_key_exists("validate", $_GET) && $_GET["validate"] == 1) {
-    print("Validated!");
-    return;
+    insert_commande($_POST["form"]);
+    return;    
   }
 ?>
 
@@ -19,7 +20,7 @@
  <body>
   <form method=post id="bookForm" action="add-check.php?validate=1">
     <input type="hidden" name="validated" value="1">
-    <input type="hidden" name="form" value="<?php echo addslashes(json_encode($_POST)); ?>>
+    <input type="hidden" name="form" value="<?php echo urlencode(json_encode($_POST)); ?>">
     <table class="form" id="tbl_commande">
 <?php
   # Parse commande

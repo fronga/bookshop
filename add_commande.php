@@ -57,7 +57,8 @@
         <td>
           <fieldset>
             <legend>Fournisseur / date&nbsp;:</legend>
-            <select name='commande[fournisseur]'>
+            <?php print $com ? "<input type=\"hidden\" name=\"commande[id]\" value=\"".$com->id."\">" : ""; ?>
+            <select name='commande[fk_fournisseur_id]'>
             <?php 
               foreach ($fournisseurs as $f) {
                 print "<OPTION ".($com && ($f->nom == $com->fk_fournisseur_nom) ? "SELECTED " : "");
@@ -70,8 +71,8 @@
             <input name="commande[frais]" type="number" placeholder="Frais" min=0.00 max=100 step=0.01 style="width: 7em" 
             <?php print $com ? "value=".$com->frais : "";?>>
             <select name="commande[monnaie]">
-              <option value="eur" <?php print ($com && $com->monnaie == "CHF") ? "" : "selected" ?>>EUR</option>
-              <option value="chf" <?php print ($com && $com->monnaie == "CHF") ? "selected" : "" ?>>CHF</option>
+              <option value="EUR" <?php print ($com && $com->monnaie == "CHF") ? "" : "selected" ?>>EUR</option>
+              <option value="CHF" <?php print ($com && $com->monnaie == "CHF") ? "selected" : "" ?>>CHF</option>
             </select>
             <input name='commande[remise_incluse]' type='checkbox' <?php print ($com && $com->remise_incluse) ? "checked" : "" ?>>
                 <label>Remise incluse</label>
@@ -86,14 +87,14 @@
           <td><input name="livre[0][src_id]" size=10 placeholder="ID"></td>
           <td>
             <?php
-                echo "<select class='select_auteur' name='livre[0][auteur]' 
+                echo "<select class='select_auteur' name='livre[0][fk_auteur_id]' 
                       onload=\"getAuthors(this)\" onchange=\"getAuthorBooks(this)\">";
                 echo "<option value=''></option></select>";
                 echo "</select>";
-                echo "<select name='livre[0][titre]'><option value=''>--</option></select>";
+                echo "<select name='livre[0][fk_livre_id]'><option value=''>--</option></select>";
             ?>
           </td>
-          <td><input name="livre[0][prix]" type="number" placeholder="Prix" min=0 max=100 step=0.01 style="width: 7em"></td>
+          <td><input name="livre[0][prix_achat_ht]" type="number" placeholder="Prix H.T." min=0 max=100 step=0.01 style="width: 7em"></td>
           <td>
               <input name="livre[0][remise]" type="number" placeholder="%" min=0 max=100 step=5 style="width: 5em">
           </td>
@@ -102,6 +103,7 @@
           </td>
           <td>  
             <select name="livre[0][taxe]">
+              <option value="0.0">TTC</option>
               <option value="0.055" selected>5.5%</option>
               <option value="0.2">20%</option>
             </select>
