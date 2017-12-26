@@ -51,7 +51,7 @@ print "</TR>\n";
 $iauthor = 0; 
 foreach ( $authors as $author ) {
     print '<TR><TD>'.++$iauthor.'</TD>';
-    print '<TD><A HREF="javascript:show('.$author->id.', \'auteur\')">'.$author->nom_complet."</A></TD>";
+    print '<TD><A HREF="javascript:show('.$author->id.',\'auteur\')">'.$author->nom_complet."</A></TD>";
     print "<TD>".$author->nb_livres."</TD></TR>\n";
 }
 
