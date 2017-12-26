@@ -1,5 +1,6 @@
 <?php
   require_once("defines.inc");
+  require_once("commandes.inc");
   $mysqli = $GLOBALS['mysqli'];  
 ?>
 
@@ -82,33 +83,16 @@
     </table>
     <table class="form" id="tbl_livres">
       <tbody class="rowContainer">
-        <tr class="cloningInput">
-          <td id="count">1.</td>
-          <td><input name="livre[0][src_id]" size=10 placeholder="ID"></td>
-          <td>
-            <?php
-                echo "<select class='select_auteur' name='livre[0][fk_auteur_id]' 
-                      onload=\"getAuthors(this)\" onchange=\"getAuthorBooks(this)\">";
-                echo "<option value=''></option></select>";
-                echo "</select>";
-                echo "<select name='livre[0][fk_livre_id]'><option value=''>--</option></select>";
-            ?>
-          </td>
-          <td><input name="livre[0][prix_achat_ht]" type="number" placeholder="Prix H.T." min=0 max=100 step=0.01 style="width: 7em"></td>
-          <td>
-              <input name="livre[0][remise]" type="number" placeholder="%" min=0 max=100 step=5 style="width: 5em">
-          </td>
-          <td>
-            <input name="livre[0][quantite]" type="number" placeholder="Qté" min=1 max=100 style="width: 5em">
-          </td>
-          <td>  
-            <select name="livre[0][taxe]">
-              <option value="0.0">TTC</option>
-              <option value="0.055" selected>5.5%</option>
-              <option value="0.2">20%</option>
-            </select>
-          </td>
-        </tr>
+        <?php 
+          $count = 1;
+          if ($livres) {
+            foreach ($livres as $livre) {
+              commande_row($count, $livre);
+              $count++;
+            }
+          }
+          commande_row($count);
+        ?>
       </tbody>
       <tfoot>
         <tr>

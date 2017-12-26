@@ -3,8 +3,9 @@
   require_once("commandes.inc");
 
   if (array_key_exists("validate", $_GET) && $_GET["validate"] == 1) {
-    insert_commande($_POST["form"]);
-    return;    
+    $insert = create_insert($_POST["form"]);
+    print($insert);
+    return;
   }
 ?>
 
