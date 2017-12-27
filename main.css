@@ -43,6 +43,10 @@ table.form tfoot td { padding-top: 20px; }
 table.form .submit { text-align: center; }
 #tbl_commande select { font-size: large; }
 table.form label { font-size:small; }
+.author_field { width: 250px; }
+.title_field { width: 250px; }
+.price_field { width: 7em; }
+.num_field { width: 5em; }
 
 /* totals */
 .totals { font-size:80%; font-style:italic;}

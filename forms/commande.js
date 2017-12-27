@@ -9,29 +9,30 @@ function getXHR() {
   }
 }
 
-$('.select_auteur').ready(function () {
+// Call when page rendering is done
+$(function () {
   getAuthors($('.select_auteur'));
 });
 
-function getAuthors(element) {
+function getAuthors(elements) {
   // Get list of authors dynamically
   // Argument: the select element to fill
   var xhr = getXHR();  // The variable that makes Ajax possible!
   if (!xhr) { return false; }
-  xhr.onreadystatechange = function () {
-    element.html("<OPTION VALUE=''>-- Choisir un auteur --</OPTION>");
-    if (xhr.readyState == 4) {
+  xhr.onloadend = function (pe) {
+    elements.html("<option value=''>-- Choisir un auteur --</option>");
+    if (xhr.readyState == XMLHttpRequest.DONE) {
       result = JSON.parse(xhr.response);
       $.each(result, function (i, item) {
         var nom = (item.nom ? item.nom : '') + (item.postfix ? ' ' + item.postfix : '');
         var prenom = (item.prefix ? item.prefix + ' ' : '') + (item.prenom ? item.prenom : '');
-        element.append($('<option>', {
+        elements.append($('<option>', {
           value: item.id,
           text: nom + ", " + prenom
         }));
       });
     } else if (xhr.readyState > 0 && xhr.readyState < 4) {
-      element.html("<OPTION>Chargement en cours...</OPTION>");
+        elements.html("<OPTION>Chargement en cours...</OPTION>");
     }
   }
   xhr.open("GET", "query.php?table=auteurs", true);
@@ -70,7 +71,7 @@ function getAuthorBooks(element) {
 // Clone a row in a form
 var regex = /^(livre\[)\d+(\].*)$/i;
 var cloneIndex = $(".cloningInput").length + 1;
-function clone() {
+function clone(count) {
   $(".cloningInput").clone()
     .appendTo("tbody.rowContainer")
     .attr("id", "clonedInput" + cloneIndex)
@@ -83,7 +84,7 @@ function clone() {
           if (match = this[element].match(regex)) {
             this[element] = match[1] + cloneIndex + match[2];
           } else if (this[element] == "count") {
-            $(this).html(cloneIndex + 1 + ".");
+            $(this).html(count + cloneIndex + ".");
           }
         }
       }, this);
@@ -136,25 +137,27 @@ function validateForm() {
 
   // Validate livre fields
   var error_list = [];
-  for (var i = 0; i < form.livres.length; ++i) {
+  form.livres.forEach(function(item, index, arr) {
     var lerrors = "";
     ["fk_livre_id", "fk_auteur_id", "prix_achat_ht", "remise", "quantite"].forEach(
       function (field) {
-        if (!form.livres[i][field]) {
+        if (!item[field]) {
           if (error_list.length == 0) {
             error_list.push("Champs manquants dans les livres:");
           }
           if (!lerrors) {
-            lerrors = "- livre " + (i + 1) + ": ";
+            lerrors = "- livre " + (index + 1) + ": ";
+          } else {
+            lerrors += ', ';
           }
-          lerrors += field + ", ";
+          lerrors += field;
         }
       }
     );
     if (lerrors) {
-      error_list.push(lerrors.substr(0, lerrors.length - 2));
+      error_list.push(lerrors);
     }
-  }
+  });
   if (error_list.length > 0) {
     alert(error_list.join("\n"));
     return false;

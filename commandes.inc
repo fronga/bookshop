@@ -1,6 +1,12 @@
 <?php
 require_once("defines.inc");
 
+function get_conversion() {
+    $query = "SELECT id FROM `conversion_monnaies`";
+    $mysqli = $GLOBALS['mysqli'];
+    $mysqli->query($query);
+}
+
 function create_insert($form) {
     // Insert new commande in database
     // Expected input: JSON
@@ -17,17 +23,18 @@ function create_insert($form) {
         }
         $query = substr($query, 0, -1).")";
         print($query);
-        # $mysqli->query($query);
-        # $commande_id = $mysqli->insert_id;
+        $mysqli->query($query);
+        $commande_id = $mysqli->insert_id;
     } else {
         $commande_id = $json->commande->id;
     }
 
+    # Retrieve latest conversion info
+
     # Process livres
     $query = "INSERT INTO `livre_commande` (";
-    $fields = [];
-    foreach ($json->livre[0] as $key => $val ) {
-        $fields[] = $key;
+    $fields = ["src_id", "fk_livre_id", "prix_achat_ht", "remise", "quantite", "taxe", "fk_commande_id", "fk_conversion_id"];
+    foreach ($fields as $key) {
         $query .= $key.",";
     }
     $query = substr($query, 0, -1).") VALUES ";
@@ -45,28 +52,52 @@ function create_insert($form) {
 }
 
 function commande_row($count, $row = null) {
-    $zero = $count - 1;
-    echo '<tr class="cloningInput"><td id="count">'.$count.'</td>';
-    echo '  <td><input name="livre['.$zero.'][src_id]" size=10 placeholder="ID" '.(print($row ? $row->src_id : "")).'></td>';
-    echo '  <td><select class="select_auteur" name="livre['.$zero.'][fk_auteur_id]" onload=\"getAuthors(this)\" onchange=\"getAuthorBooks(this)\">';
-    echo '          <option value="'.(print($row ? $row->fk_auteur_id : '')).'"></option>';
-    echo "      </select>";
-    echo "      <select name='livre[".$zero."][fk_livre_id]'><option value=''>--</option></select>";
-    echo '  </td>
-    <td><input name="livre['.$zero.'][prix_achat_ht]" type="number" placeholder="Prix H.T." min=0 max=100 step=0.01 style="width: 7em"></td>
-    <td>
-        <input name="livre['.$zero.'][remise]" type="number" placeholder="%" min=0 max=100 step=5 style="width: 5em">
-    </td>
-    <td>
-        <input name="livre['.$zero.'][quantite]" type="number" placeholder="Qté" min=1 max=100 style="width: 5em">
-    </td>
+    $empty = ($row == null);
+    if ($empty) { print('<tr class="cloningInput">'); }
+    print('  <td id="count">'.$count.'.</td>');
+    print('  <td><input size=10 ');
+    if ($empty) {
+        print('name="livre[0][src_id]" placeholder="ID">');
+    } else {
+        if ($row['src_id']) { print(' value="'.$row['src_id'].'"'); }
+        print(' disabled>');
+    }
+    print('</td><td>');
+    if ($empty) {
+        print('     <select class="select_auteur author_field" name="livre[0][fk_auteur_id]" onchange="getAuthorBooks(this)">');
+        print('          <option></option>');
+        print('     </select>');
+        print('     <select class="title_field" name="livre[0][fk_livre_id]"><option>--</option></select>');
+    } else {
+        print('     <input class="author_field" disabled value="'.$row['nom_complet'].'">');
+        print('     <input class="title_field" disabled value="'.$row['titre'].'">');
+    }
+    print('  </td><td><input type="number" min=0 max=100 step=0.01 class="price_field"');
+    if ($empty) {
+        print('name="livre[0][prix_achat_ht]" placeholder="Prix H.T.">');
+    } else {
+        print('disabled value="'.$row['prix_achat_ht'].'">');
+    }
+    print ('</td><td><input type="number" placeholder="%" min=0 max=100 step=5 class="num_field"');
+    if ($empty) {
+        print('name="livre[0][remise]">');
+    } else {
+        print('disabled value="'.($row['remise'] * 100.).'">');
+    }
+    print('</td><td><input type="number" placeholder="Qté" min=1 max=100 class="num_field"');
+    if ($empty) {
+        print('name="livre[0][quantite]">');
+    } else {
+        print('disabled value="'.$row['quantite'].'">');
+    }
+    print('</td>
     <td>  
-        <select name="livre['.$zero.'][taxe]">
-            <option value="0.0">TTC</option>
-            <option value="0.055" selected>5.5%</option>
-            <option value="0.2">20%</option>
+        <select '.($empty ? 'name="livre[0][taxe]"' : 'disabled').'>
+            <option value="0.0" '.($empty && $row['taxes'] == 0 ? 'selected': '').'>TTC</option>
+            <option value="0.055" '.($empty || $row['taxes'] == 0.055 ? 'selected': '').'>5.5%</option>
+            <option value="0.2" '.($empty && $row['taxes'] == 0.2 ? 'selected': '').'>20%</option>
         </select>
     </td>
-</tr>';
+</tr>');
 }
 ?>

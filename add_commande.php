@@ -40,7 +40,7 @@
       $query .= " LEFT JOIN auteurs AS a ON l.fk_auteur_id = a.id";
       $query .= " WHERE lc.fk_commande_id = ".$_GET["commande"];
       $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
-      $livres = $result->fetch_object();
+      $livres = $result->fetch_all(MYSQLI_ASSOC);
       $result->close();
     }
 
@@ -97,7 +97,7 @@
       <tfoot>
         <tr>
           <td colspan="2">
-            <button type="button" class="clone" onclick="clone()">
+            <button type="button" class="clone" onclick="clone(<?php print($count); ?>)">
               + Ajouter
             </button>
           </td>

@@ -5,7 +5,12 @@
   if (array_key_exists("validate", $_GET) && $_GET["validate"] == 1) {
     $insert = create_insert($_POST["form"]);
     print($insert);
-    return;
+    $ok = $mysqli->query($insert);
+    if (!$ok) {
+      nicedie("Insert failed: ".$mysqli->error);
+    } else {
+      header("Location: /~fronga/procure/?view=commandes");
+    }
   }
 ?>
 
