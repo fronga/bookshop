@@ -34,7 +34,7 @@ $sortby = array_key_exists('sortby',$_GET) ? $_GET['sortby'] : "nom_complet";
 usort($livres_commande, build_sorter($sortby, $order));
 
 # Print table header with field names
-print "<TR><TH>Row</TH>";
+print "<TR><TH>No.</TH>";
 foreach ( $fields as $name => $var ) {
     print "<TH NOWRAP>";
     if ( $var ) {

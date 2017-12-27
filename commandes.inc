@@ -1,10 +1,12 @@
 <?php
 require_once("defines.inc");
 
-function get_conversion() {
+function get_conversion_factor() {
     $query = "SELECT id FROM `conversion_monnaies`";
     $mysqli = $GLOBALS['mysqli'];
-    $mysqli->query($query);
+    $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
+    $answer = $result->fetch_object();
+    return $answer->id;
 }
 
 function create_insert($form) {
@@ -30,10 +32,12 @@ function create_insert($form) {
     }
 
     # Retrieve latest conversion info
+    $conversion_id = get_conversion_factor();
+    $devise_achat = '"'.$json->commande->monnaie.'"';
 
     # Process livres
     $query = "INSERT INTO `livre_commande` (";
-    $fields = ["src_id", "fk_livre_id", "prix_achat_ht", "remise", "quantite", "taxe", "fk_commande_id", "fk_conversion_id"];
+    $fields = ["src_id", "fk_livre_id", "prix_achat_ht", "remise", "quantite", "taxes", "devise_achat", "fk_commande_id", "fk_conversion_id"];
     foreach ($fields as $key) {
         $query .= $key.",";
     }
@@ -42,9 +46,11 @@ function create_insert($form) {
     foreach ($json->livre as $livre) {
         $query .= "(";
         foreach ($fields as $key) {
+            if (property_exists($livre, $key))
             $query .= "'".$livre->$key."',";
         }
-        $query = substr($query, 0, -1)."),";
+        $query .= join(",", [$devise_achat, $commande_id, $conversion_id]);
+        $query .= "),";
     }
     $query = substr($query, 0, -1);
     
@@ -92,7 +98,7 @@ function commande_row($count, $row = null) {
     }
     print('</td>
     <td>  
-        <select '.($empty ? 'name="livre[0][taxe]"' : 'disabled').'>
+        <select '.($empty ? 'name="livre[0][taxes]"' : 'disabled').'>
             <option value="0.0" '.($empty && $row['taxes'] == 0 ? 'selected': '').'>TTC</option>
             <option value="0.055" '.($empty || $row['taxes'] == 0.055 ? 'selected': '').'>5.5%</option>
             <option value="0.2" '.($empty && $row['taxes'] == 0.2 ? 'selected': '').'>20%</option>
