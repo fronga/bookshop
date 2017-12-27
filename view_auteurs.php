@@ -2,10 +2,12 @@
 
 // Get list of authors and return table
 $fields = array(
-    "Nom" => 'nom_complet',
+    "No." => 'id',
+    "Nom" => 'nom',
+    "Nom complet" => 'nom_complet',
     "#(livres)" => 'nb_livres'
 );
-$query = "SELECT `auteurs`.id, `auteurs`.nom_complet, count(livres.id) AS nb_livres FROM `auteurs`
+$query = "SELECT `auteurs`.id, `auteurs`.nom, `auteurs`.nom_complet, count(livres.id) AS nb_livres FROM `auteurs`
  LEFT JOIN livres ON livres.fk_auteur_id = auteurs.id GROUP BY auteurs.id;";
   
 $mysqli = $GLOBALS['mysqli'];
@@ -28,7 +30,7 @@ $sortby = array_key_exists('sortby',$_GET) ? $_GET['sortby'] : "nom_complet";
 usort($authors, build_sorter($sortby, $order));
 
 # Print table header with field names
-print "<TR><TH>No.</TH>";
+print "<TR>";
 foreach ( $fields as $name => $var ) {
     print "<TH NOWRAP>";
     if ( $var ) {
@@ -50,7 +52,8 @@ print "</TR>\n";
 
 $iauthor = 0; 
 foreach ( $authors as $author ) {
-    print '<TR><TD>'.++$iauthor.'</TD>';
+    print '<TR><TD>'.$author->id.'</TD>';
+    print '<TD>'.$author->nom.'</TD>';
     print '<TD><A HREF="javascript:show('.$author->id.',\'auteur\')">'.$author->nom_complet."</A></TD>";
     print "<TD>".$author->nb_livres."</TD></TR>\n";
 }

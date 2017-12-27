@@ -2,11 +2,13 @@
 
 // Get list of authors and return table
 $fields = array(
+    "No." => 'id',
     "Auteur" => 'nom_complet',
+    "Edition" => 'editeur',
     "Titre" => 'titre',
     "Vendus" => 'vendus'
 );
-$query =  "SELECT `livres`.id, `livres`.titre, `auteurs`.nom_complet, SUM(`livre_commande`.quantite) AS vendus";
+$query =  "SELECT `livres`.id, `livres`.titre, `livres`.editeur, `auteurs`.nom_complet, SUM(`livre_commande`.quantite) AS vendus";
 $query .= " FROM `livres` LEFT JOIN auteurs ON livres.fk_auteur_id = auteurs.id";
 $query .= " LEFT JOIN livre_commande ON `livres`.id = `livre_commande`.fk_livre_id";
 $query .= " GROUP BY `livres`.id";
@@ -31,7 +33,7 @@ $sortby = array_key_exists('sortby',$_GET) ? $_GET['sortby'] : "titre";
 usort($livres, build_sorter($sortby, $order));
 
 # Print table header with field names
-print "<TR><TH>No.</TH>";
+print "<TR>";
 foreach ( $fields as $name => $var ) {
     print "<TH NOWRAP>";
     if ( $var ) {
@@ -51,11 +53,11 @@ foreach ( $fields as $name => $var ) {
 }
 print "</TR>\n";
 
-$ilivre = 0; 
 foreach ( $livres as $livre ) {
-    print '<TR><TD>'.++$ilivre.'</TD>';
+    print '<TR><TD>'.$livre->id.'</TD>';
     print '<TD>'.$livre->nom_complet.'</TD>';
     print '<TD><!-- A HREF="javascript:show('.$livre->id.', \'livre\')" --><I>'.$livre->titre."</I><!-- /A --></TD>";
+    print '<TD>'.$livre->editeur.'</TD>';
     print "<TD ALIGN=\"RIGHT\">".$livre->vendus."</TD></TR>\n";
 }
 

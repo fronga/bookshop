@@ -88,7 +88,7 @@ function commande_row($count, $row = null) {
     if ($empty) {
         print('name="livre[0][remise]">');
     } else {
-        print('disabled value="'.($row['remise'] * 100.).'">');
+        print('disabled value="'.$row['remise'].'">');
     }
     print('</td><td><input type="number" placeholder="Qté" min=1 max=100 class="num_field"');
     if ($empty) {
