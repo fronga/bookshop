@@ -8,7 +8,7 @@
     $query = "SELECT id, titre FROM livres WHERE fk_auteur_id = ".$id_auteur;
   }
   
-  $result = $mysqli->query($query) or die ("Query $query failed: ".$mysqli->error);
+  $result = $mysqli->query($query) or nicedie ("Query $query failed:\n".$mysqli->error);
   while ($answer = $result->fetch_object()) {
     $response[] = $answer;
   }

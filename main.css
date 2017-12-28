@@ -36,6 +36,13 @@ table.list tr:nth-child(odd) { background-color:#99CCFF;}
 table.list td {  padding-left:10px; padding-top:2px; }
 table.list th {  padding:10px; font-weight:normal; }
 
+/* Accordion */
+#accordion h3 { margin: 10px; }
+p.accordion { margin:0pt; padding-bottom: 10pt; }
+/* p:nth-child(odd) {color:lightblue; font-weight:bold}
+p:nth-child(even) {color:darkblue;} */
+
+
 /* Form styles */
 table.form { padding-bottom: 20px; }
 table.form thead { text-align:center; font-size: smaller; }

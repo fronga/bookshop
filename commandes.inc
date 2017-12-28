@@ -53,8 +53,7 @@ function create_insert($form) {
         $query .= "),";
     }
     $query = substr($query, 0, -1);
-    
-    return $query;
+    return [$commande_id, $query];
 }
 
 function commande_row($count, $row = null) {
