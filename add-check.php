@@ -3,7 +3,8 @@
   require_once("commandes.inc");
 
   if (array_key_exists("validate", $_GET) && $_GET["validate"] == 1) {
-    [$id, $insert] = create_insert($_POST["form"]);
+    list($id, $insert) = create_insert($_POST["form"]);
+    print("ID:"); print($id);
     $ok = $mysqli->query($insert);
     if (!$ok) {
       nicedie("Insert failed: ".$insert."\nError: ".$mysqli->error);

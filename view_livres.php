@@ -4,8 +4,8 @@
 $fields = array(
     "No." => 'id',
     "Auteur" => 'nom_complet',
-    "Edition" => 'editeur',
     "Titre" => 'titre',
+    "Edition" => 'editeur',
     "Vendus" => 'vendus'
 );
 $query =  "SELECT `livres`.id, `livres`.titre, `livres`.editeur, `auteurs`.nom_complet, SUM(`livre_commande`.quantite) AS vendus";
@@ -56,7 +56,7 @@ print "</TR>\n";
 foreach ( $livres as $livre ) {
     print '<TR><TD>'.$livre->id.'</TD>';
     print '<TD>'.$livre->nom_complet.'</TD>';
-    print '<TD><!-- A HREF="javascript:show('.$livre->id.', \'livre\')" --><I>'.$livre->titre."</I><!-- /A --></TD>";
+    print '<TD><I>'.$livre->titre."</I></TD>";
     print '<TD>'.$livre->editeur.'</TD>';
     print "<TD ALIGN=\"RIGHT\">".$livre->vendus."</TD></TR>\n";
 }

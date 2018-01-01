@@ -37,13 +37,14 @@ function create_insert($form) {
 
     # Process livres
     $query = "INSERT INTO `livre_commande` (";
-    $fields = ["src_id", "fk_livre_id", "prix_achat_ht", "remise", "quantite", "taxes", "devise_achat", "fk_commande_id", "fk_conversion_id"];
+    $fields = ["src_id", "fk_livre_id", "prix_achat_ht", "remise", "taxes", "quantite", "stock", "devise_achat","fk_commande_id", "fk_conversion_id"];
     foreach ($fields as $key) {
         $query .= $key.",";
     }
     $query = substr($query, 0, -1).") VALUES ";
 
     foreach ($json->livre as $livre) {
+        $livre->stock = $livre->quantite;
         $query .= "(";
         foreach ($fields as $key) {
             if (property_exists($livre, $key))
@@ -53,7 +54,7 @@ function create_insert($form) {
         $query .= "),";
     }
     $query = substr($query, 0, -1);
-    return [$commande_id, $query];
+    return array($commande_id, $query);
 }
 
 function commande_row($count, $row = null) {

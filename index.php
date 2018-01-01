@@ -18,7 +18,8 @@
 <HEAD>
 <TITLE>Base de données procure</TITLE>
 <LINK rel="stylesheet" href="main.css" type="text/css">
-<script type="text/javascript" src="display.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/display.js"></script>
 <link rel="stylesheet" href="main.css">
 <?php
 if ($view == "commandes") {
@@ -60,11 +61,10 @@ if ($view == "commandes") {
             collapsible: true,
             animate: 200,
             active: false,
+            heightStyle: "content",
             beforeActivate: function( event, ui ) {
                 if (ui.newPanel.children().html() == "") {
-                  ui.newPanel.children().html(
-                    display_livres_commande(ui.newHeader.attr(\'id\'));
-                  );
+                  display_livres_commande(ui.newHeader.attr(\'id\'), ui.newPanel.children());
                 }
             }
         }

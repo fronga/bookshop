@@ -35,6 +35,7 @@ table.list tr { padding:0px; }
 table.list tr:nth-child(odd) { background-color:#99CCFF;}
 table.list td {  padding-left:10px; padding-top:2px; }
 table.list th {  padding:10px; font-weight:normal; }
+table.sublist { font-size:90%; }
 
 /* Accordion */
 #accordion h3 { margin: 10px; }

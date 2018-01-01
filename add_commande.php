@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
   <script src="jquery/jquery-1.12.4.js"></script>
   <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
-  <script src="forms/commande.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/commande.js"></script>
   <script language=JavaScript>
     $( function() {
       $( "#datepicker" ).datepicker();
@@ -62,6 +63,7 @@
             <select name='commande[fk_fournisseur_id]'>
             <?php 
               foreach ($fournisseurs as $f) {
+                print($f->nom." ".$com->fk_fournisseur_nom);
                 print "<OPTION ".($com && ($f->nom == $com->fk_fournisseur_nom) ? "SELECTED " : "");
                 print "VALUE=".$f->id.">".$f->nom."</OPTION>"; 
               } 

@@ -1,13 +1,4 @@
-function getXHR() {
-  try {
-    xhr = new XMLHttpRequest();
-    return xhr;
-  } catch (e) {
-    // Something went wrong
-    alert("Your browser broke!");
-    return false;
-  }
-}
+
 
 // Call when page rendering is done
 $(function () {
