@@ -59,7 +59,7 @@ if ($view == "commandes") {
     $( "#accordion" ).accordion(
         {
             collapsible: true,
-            animate: 200,
+            animate: 100,
             active: false,
             heightStyle: "content",
             beforeActivate: function( event, ui ) {

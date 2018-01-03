@@ -24,7 +24,7 @@ $result->close();
 foreach ($commandes as $commande) {
     print('<h3 id="'.$commande->id.'">'.$commande->date.' '.$commande->fournisseur);
     print('<div style="float:right"><small>');
-    print('livres: '.$commande->num_livres.' / total: '.round($commande->cout_total + $commande->frais).' '.$commande->monnaie);
+    print('livres: '.$commande->num_livres.' / total: '.round($commande->cout_total + $commande->frais, 2).' '.$commande->monnaie);
     print('</small></div></h3>');
     print('<div><p class="accordion"></p></div>');
 }

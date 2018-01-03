@@ -31,7 +31,9 @@
   <?php
     // TODO: Load data if modifying existing order
     if (array_key_exists("commande", $_GET)) {
-      $query = "SELECT * from `commandes` WHERE id = ".$_GET["commande"];
+      $query = "SELECT c.*, f.nom from `commandes` AS c";
+      $query .= " LEFT JOIN fournisseurs AS f on c.fk_fournisseur_id = f.id";
+      $query .= " WHERE c.id = ".$_GET["commande"];
       $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
       $com = $result->fetch_object();
       $result->close();
@@ -52,19 +54,18 @@
         $fournisseurs[] = $answer;
     }
     $result->close();
-  ?>
+?>
   <form method=post id="bookForm" action="add-check.php" onsubmit="return validateForm()">
     <table class="form" id="tbl_commande">
       <tr>
         <td>
           <fieldset>
             <legend>Fournisseur / date&nbsp;:</legend>
-            <?php print $com ? "<input type=\"hidden\" name=\"commande[id]\" value=\"".$com->id."\">" : ""; ?>
+            <?php print $com ? "<input type=\"hidden\" name=\"commande[id]\" value=\"".$com->id."\">\n" : ""; ?>
             <select name='commande[fk_fournisseur_id]'>
             <?php 
               foreach ($fournisseurs as $f) {
-                print($f->nom." ".$com->fk_fournisseur_nom);
-                print "<OPTION ".($com && ($f->nom == $com->fk_fournisseur_nom) ? "SELECTED " : "");
+                print "<OPTION ".($com && ($f->nom == $com->nom) ? "SELECTED " : "");
                 print "VALUE=".$f->id.">".$f->nom."</OPTION>"; 
               } 
             ?>

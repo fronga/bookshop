@@ -55,8 +55,10 @@ function getAuthorBooks(element) {
   var src_value = element.value;
   if (src_value) {
     xhr.open("GET", "query.php?table=livres&id=" + src_value, true);
-    xhr.send(null);
+  } else {
+    xhr.open("GET", "query.php?table=livres", true);
   }
+  xhr.send(null);
 }
 
 // Clone a row in a form

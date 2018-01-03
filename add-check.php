@@ -4,12 +4,13 @@
 
   if (array_key_exists("validate", $_GET) && $_GET["validate"] == 1) {
     list($id, $insert) = create_insert($_POST["form"]);
-    print("ID:"); print($id);
     $ok = $mysqli->query($insert);
     if (!$ok) {
       nicedie("Insert failed: ".$insert."\nError: ".$mysqli->error);
     } else {
-      header("Location: /~fronga/procure/?view=commandes&commande=" + $id);
+      $url = "Location: /~fronga/procure/?view=commandes&commande=" + string($id);
+      print($url);
+      header($url);
     }
     return;
   }
