@@ -24,8 +24,10 @@ function create_insert($form) {
             $query .= "'".$json->commande->{$field}."',";
         }
         $query = substr($query, 0, -1).")";
-        print($query);
-        $mysqli->query($query);
+        $ok = $mysqli->query($query);
+        // if (!$ok) {
+        //   nicedie("Insert failed: ".$query."\nError: ".$mysqli->error);
+        // }
         $commande_id = $mysqli->insert_id;
     } else {
         $commande_id = $json->commande->id;
@@ -61,7 +63,7 @@ function commande_row($count, $row = null) {
     $empty = ($row == null);
     if ($empty) { print('<tr class="cloningInput">'); }
     print('  <td id="count">'.$count.'.</td>');
-    print('  <td><input size=10 ');
+    print('  <td><input size=10 onfocusout="getBookFromID(this)"');
     if ($empty) {
         print('name="livre[0][src_id]" placeholder="ID">');
     } else {
@@ -99,7 +101,7 @@ function commande_row($count, $row = null) {
     print('</td>
     <td>  
         <select '.($empty ? 'name="livre[0][taxes]"' : 'disabled').'>
-            <option value="0.0" '.($empty && $row['taxes'] == 0 ? 'selected': '').'>TTC</option>
+            <option value="0" '.($empty && $row['taxes'] == 0 ? 'selected': '').'>TTC</option>
             <option value="0.055" '.($empty || $row['taxes'] == 0.055 ? 'selected': '').'>5.5%</option>
             <option value="0.2" '.($empty && $row['taxes'] == 0.2 ? 'selected': '').'>20%</option>
         </select>

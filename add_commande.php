@@ -16,7 +16,7 @@
   <script src="js/commande.js"></script>
   <script language=JavaScript>
     $( function() {
-      $( "#datepicker" ).datepicker();
+      $( "#datepicker" ).datepicker({dateFormat: "yy-mm-dd"});
     } );
     $( function() {
       $( ".widget button" ).button( {

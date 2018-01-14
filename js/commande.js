@@ -132,7 +132,7 @@ function validateForm() {
   var error_list = [];
   form.livres.forEach(function(item, index, arr) {
     var lerrors = "";
-    ["fk_livre_id", "fk_auteur_id", "prix_achat_ht", "remise", "quantite"].forEach(
+    ["src_id", "fk_auteur_id", "prix_achat_ht", "remise", "quantite"].forEach(
       function (field) {
         if (!item[field]) {
           if (error_list.length == 0) {
@@ -157,4 +157,60 @@ function validateForm() {
   }
 
   return true;
+}
+
+function setValue(key, values, pattern) {
+  var name = pattern + key + "]";
+  var element = $("[name='" + name + "']");
+  if (element) {
+    console.log(element);
+    element.val(values[key]);
+  } 
+}
+
+function getBookFromID(element) {
+  // Get name of fournisseur
+  e = document.getElementsByName("commande[fk_fournisseur_id]")[0];
+  fk_fournisseur_id = e.options[e.selectedIndex].value;
+  src_id = element.value
+  pattern = element.name.substring(0, element.name.search("src_id"));
+  
+  var xhr = getXHR();  // The variable that makes Ajax possible!
+  if (!xhr) { return false; }
+  xhr.onloadend = function (pe) {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      result = JSON.parse(xhr.response);
+      if (result && result.length == 1) {
+        var livre = result[0];
+        console.log(livre);
+        var key = 'fk_livre_id';
+        $("[name='" + pattern + key + "]']").append(
+          $('<option>', {
+            value: livre[key],
+            text: livre["titre"],
+            selected: true
+          }));
+        setValue('prix_achat_ht', livre, pattern);
+        setValue('remise', livre, pattern);
+        setValue('quantite', livre, pattern);
+        setValue('taxes', livre, pattern);
+        setValue('fk_auteur_id', livre, pattern)
+        
+      }
+      
+      // $.each(result, function (i, item) {
+      //   var nom = (item.nom ? item.nom : '') + (item.postfix ? ' ' + item.postfix : '');
+      //   var prenom = (item.prefix ? item.prefix + ' ' : '') + (item.prenom ? item.prenom : '');
+      //   elements.append($('<option>', {
+      //     value: item.id,
+      //     text: nom + ", " + prenom
+      //   }));
+      // });
+    } else if (xhr.readyState > 0 && xhr.readyState < 4) {
+    }
+  }
+  url = "query.php?table=livre_commande&src_id=" + src_id + "&fk_fournisseur_id=" + fk_fournisseur_id;
+  xhr.open("GET", url, true);
+  xhr.send(null);
+
 }
