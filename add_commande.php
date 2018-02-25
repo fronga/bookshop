@@ -29,7 +29,6 @@
  <body>
   <h1>Ajouter/modifier une commande</h1>
   <?php
-    // TODO: Load data if modifying existing order
     if (array_key_exists("commande", $_GET)) {
       $query = "SELECT c.*, f.nom from `commandes` AS c";
       $query .= " LEFT JOIN fournisseurs AS f on c.fk_fournisseur_id = f.id";
@@ -48,7 +47,7 @@
     }
 
     // Load data from fournisseurs
-    $query = "SELECT * FROM fournisseurs";
+    $query = "SELECT * FROM fournisseurs ORDER BY nom ASC";
     $result = $mysqli->query($query) or nicedie ("Query $query failed: ".$mysqli->error);
     while ($answer = $result->fetch_object()) {
         $fournisseurs[] = $answer;

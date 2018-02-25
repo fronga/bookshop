@@ -8,8 +8,8 @@
     if (!$ok) {
       nicedie("Insert failed: ".$insert."\nError: ".$mysqli->error);
     } else {
-      $url = "Location: /~fronga/procure/?view=commandes&commande=" + string($id);
-      print($url);
+      # print("ID: $id");
+      $url = "Location: /~fronga/procure/?view=commandes&commande=$id";
       header($url);
     }
     return;

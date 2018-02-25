@@ -75,6 +75,8 @@ function commande_row($count, $row = null) {
         print('     <select class="select_auteur author_field" name="livre[0][fk_auteur_id]" onchange="getAuthorBooks(this)">');
         print('          <option></option>');
         print('     </select>');
+        print('     <button type="button" class="refresh_auteur" onclick="getAuthors(this)">-</button>');
+        print('     <script>$("button.refresh_auteur").button({icon: "ui-icon-refresh", showLabel: false})</script>');
         print('     <select class="title_field" name="livre[0][fk_livre_id]"><option>--</option></select>');
     } else {
         print('     <input class="author_field" disabled value="'.$row['nom_complet'].'">');

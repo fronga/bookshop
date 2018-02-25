@@ -1,29 +1,34 @@
 
-
 // Call when page rendering is done
 $(function () {
-  getAuthors($('.select_auteur'));
+  getAuthors();
+  getAuthorBooks();
 });
 
-function getAuthors(elements) {
+function getAuthors(element) {
   // Get list of authors dynamically
-  // Argument: the select element to fill
+  // Argument: the select element to fill or none
+  if (element === undefined) {
+    select_auteur = $('.select_auteur');
+  } else {
+    select_auteur = $(element).parent().find(".select_auteur"); 
+  }
   var xhr = getXHR();  // The variable that makes Ajax possible!
   if (!xhr) { return false; }
   xhr.onloadend = function (pe) {
-    elements.html("<option value=''>-- Choisir un auteur --</option>");
+    select_auteur.html("<option value=''>-- Choisir un auteur --</option>");
     if (xhr.readyState == XMLHttpRequest.DONE) {
       result = JSON.parse(xhr.response);
       $.each(result, function (i, item) {
         var nom = (item.nom ? item.nom : '') + (item.postfix ? ' ' + item.postfix : '');
         var prenom = (item.prefix ? item.prefix + ' ' : '') + (item.prenom ? item.prenom : '');
-        elements.append($('<option>', {
+        select_auteur.append($('<option>', {
           value: item.id,
           text: nom + ", " + prenom
         }));
       });
     } else if (xhr.readyState > 0 && xhr.readyState < 4) {
-        elements.html("<OPTION>Chargement en cours...</OPTION>");
+        select_auteur.html("<OPTION>Chargement en cours...</OPTION>");
     }
   }
   xhr.open("GET", "query.php?table=auteurs", true);
@@ -35,10 +40,13 @@ function getAuthorBooks(element) {
   // Argument: the select element from which to take the selected author
   var xhr = getXHR();  // The variable that makes Ajax possible!
   if (!xhr) { return false; }
+  if (element == undefined) {
+    element = $('.title_field');
+  }
 
   // function that will receive data sent from the server
   xhr.onreadystatechange = function () {
-    var selectBook = $(element).next();
+    var selectBook = $(element).parent().find(".title_field");
     if (xhr.readyState == 4) {
       result = JSON.parse(xhr.response);
       selectBook.empty()
@@ -52,11 +60,11 @@ function getAuthorBooks(element) {
       selectBook.html("<OPTION>Chargement en cours...</OPTION>");
     }
   }
-  var src_value = element.value;
-  if (src_value) {
-    xhr.open("GET", "query.php?table=livres&id=" + src_value, true);
+  if (element.value == undefined) {
+    xhr.open("GET", "query.php?table=livres", true);    
   } else {
-    xhr.open("GET", "query.php?table=livres", true);
+    var src_value = element.value;
+    xhr.open("GET", "query.php?table=livres&id=" + src_value, true);
   }
   xhr.send(null);
 }
@@ -132,7 +140,7 @@ function validateForm() {
   var error_list = [];
   form.livres.forEach(function(item, index, arr) {
     var lerrors = "";
-    ["src_id", "fk_auteur_id", "prix_achat_ht", "remise", "quantite"].forEach(
+    ["src_id", "prix_achat_ht", "remise", "quantite"].forEach(
       function (field) {
         if (!item[field]) {
           if (error_list.length == 0) {
@@ -163,7 +171,6 @@ function setValue(key, values, pattern) {
   var name = pattern + key + "]";
   var element = $("[name='" + name + "']");
   if (element) {
-    console.log(element);
     element.val(values[key]);
   } 
 }
@@ -182,7 +189,6 @@ function getBookFromID(element) {
       result = JSON.parse(xhr.response);
       if (result && result.length == 1) {
         var livre = result[0];
-        console.log(livre);
         var key = 'fk_livre_id';
         $("[name='" + pattern + key + "]']").append(
           $('<option>', {
@@ -190,12 +196,11 @@ function getBookFromID(element) {
             text: livre["titre"],
             selected: true
           }));
-        setValue('prix_achat_ht', livre, pattern);
-        setValue('remise', livre, pattern);
-        setValue('quantite', livre, pattern);
-        setValue('taxes', livre, pattern);
-        setValue('fk_auteur_id', livre, pattern)
-        
+        ['prix_achat_ht', 'remise', 'quantite', 'taxes', 'fk_auteur_id'].forEach(
+          function(key) {
+            setValue(key, livre, pattern);
+          }
+        );
       }
       
       // $.each(result, function (i, item) {
