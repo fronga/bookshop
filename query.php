@@ -9,6 +9,7 @@
       $id_auteur = $mysqli->real_escape_string($_GET['id']);
       $query .= " WHERE fk_auteur_id = ".$id_auteur;
     }
+    $query .= " ORDER BY titre ASC";
   } elseif ($table == 'livre_commande') {
     $fk_fournisseur_id = $_GET['fk_fournisseur_id'];
     $src_id = $_GET['src_id'];
