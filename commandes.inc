@@ -88,7 +88,7 @@ function commande_row($count, $row = null) {
     } else {
         print('disabled value="'.$row['prix_achat_ht'].'">');
     }
-    print ('</td><td><input type="number" placeholder="%" min=0 max=100 step=5 class="num_field"');
+    print ('</td><td><input type="number" placeholder="%" min=0 max=100 step=1 class="num_field"');
     if ($empty) {
         print('name="livre[0][remise]">');
     } else {
