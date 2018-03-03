@@ -26,7 +26,7 @@
 
   if ($livres) {
     $response = "<TABLE class=\"list sublist\">";
-    $response .= "<TH><TD></TD><TD></TD><TD>Prix achat<TD COLSPAN=\"2\">Prix public</TD><TD>Quantité</TD></TH>";
+    $response .= "<THEAD><TR><TH COLSPAN=\"3\"></TH><TH>Prix achat</TD><TH COLSPAN=\"2\">Prix public</TH><TH>Quantité</TH></THEAD>\n<TBODY>";
     $ilivre = 1;
     foreach ( $livres as $livre ) {
         $response .= '<TR><TD>'.$ilivre++.'.</TD>';
@@ -38,7 +38,7 @@
         $response .= '<TD ALIGN="RIGHT" nowrap> x '.$livre->quantite."</TD>";
         $response .= "</TR>\n";
     }
-    $response .= "</TABLE>";
+    $response .= "</TBODY></TABLE>";
   } else {
     $response = "Aucun livre commandé<BR>";
   }

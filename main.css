@@ -34,7 +34,7 @@ table.list { text-align:left; border-collapse:collapse; border-color:navy; width
 table.list tr { padding:0px; }
 table.list tr:nth-child(odd) { background-color:#99CCFF;}
 table.list td {  padding-left:10px; padding-top:2px; }
-table.list th {  padding:10px; font-weight:normal; }
+table.list th {  padding:10px; text-align: center; }
 table.sublist { font-size:90%; }
 
 /* Accordion */
