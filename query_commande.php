@@ -18,18 +18,19 @@
   $result->close();
 
   # Add price in other currency
-  $query = "SELECT `facteur_eur_chf` AS fact FROM `conversion_monnaies`";
-  $query .= " WHERE `date` > ".$livres[0]->c_date." ORDER BY `date` DESC LIMIT 1";
-  $result = $mysqli->query($query) or nicedie("Query $query failed:\n".$mysqli->error);
-  $answer = $result->fetch_object();
-  $fact = $answer->fact;
-  if ($livres[0]->monnaie == 'EUR') {
-      $other_currency = 'CHF';
-  } else {
-     $fact = 1.0/$fact;
-     $other_currency = 'EUR';
+  if ($livres > 0) {
+    $query = "SELECT `facteur_eur_chf` AS fact FROM `conversion_monnaies`";
+    $query .= " WHERE `date` > ".$livres[0]->c_date." ORDER BY `date` DESC LIMIT 1";
+    $result = $mysqli->query($query) or nicedie("Query $query failed:\n".$mysqli->error);
+    $answer = $result->fetch_object();
+    $fact = $answer->fact;
+    if ($livres[0]->monnaie == 'EUR') {
+        $other_currency = 'CHF';
+    } else {
+      $fact = 1.0/$fact;
+      $other_currency = 'EUR';
+    }
   }
-  
 
   if ($livres) {
     $response = "<TABLE class=\"list sublist\">";
@@ -38,8 +39,8 @@
     foreach ( $livres as $livre ) {
       
         $response .= '<TR><TD>'.$ilivre++.'.</TD>';
-        $response .= '<TD>'.$livre->nom_complet.'</TD>';
         $response .= '<TD><I>'.$livre->titre."</I></TD>";
+        $response .= '<TD>'.$livre->nom_complet.'</TD>';
         $response .= '<TD ALIGN="CENTER" nowrap>'.sprintf("%0.2f", $livre->prix_achat).' '.$livre->monnaie.'</TD>';
         $response .= '<TD ALIGN="CENTER" nowrap>'.sprintf("%0.2f", $livre->prix_public).' '.$livre->monnaie.'</TD>';
         $response .= '<TD ALIGN="CENTER" nowrap>'.sprintf("%0.0f", $livre->prix_public*$fact).' '.$other_currency.'</TD>';
