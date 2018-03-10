@@ -9,7 +9,7 @@
   $query .= " LEFT JOIN commandes AS c ON c.id = lc.fk_commande_id";
   $query .= " LEFT JOIN fournisseurs AS f ON c.fk_fournisseur_id = f.id";
   $query .= " WHERE c.id = ".$id_commande;
-  $query .= " ORDER BY lc.id ASC";
+  $query .= " ORDER BY l.titre ASC";
   
   $result = $mysqli->query($query) or nicedie("Query $query failed:<BR>".$mysqli->error);
   while ($answer = $result->fetch_object()) {
@@ -18,24 +18,32 @@
   $result->close();
 
   # Add price in other currency
-  $query = "SELECT `facteur_eur_chf` FROM `conversion_monnaies`";
+  $query = "SELECT `facteur_eur_chf` AS fact FROM `conversion_monnaies`";
   $query .= " WHERE `date` > ".$livres[0]->c_date." ORDER BY `date` DESC LIMIT 1";
   $result = $mysqli->query($query) or nicedie("Query $query failed:\n".$mysqli->error);
   $answer = $result->fetch_object();
-  $fact = $answer->facteur_eur_chf;
+  $fact = $answer->fact;
+  if ($livres[0]->monnaie == 'EUR') {
+      $other_currency = 'CHF';
+  } else {
+     $fact = 1.0/$fact;
+     $other_currency = 'EUR';
+  }
+  
 
   if ($livres) {
     $response = "<TABLE class=\"list sublist\">";
-    $response .= "<THEAD><TR><TH COLSPAN=\"3\"></TH><TH>Prix achat</TD><TH COLSPAN=\"2\">Prix public</TH><TH>Quantité</TH></THEAD>\n<TBODY>";
+    $response .= "<THEAD><TR><TH COLSPAN=\"3\"></TH><TH>Prix achat</TD><TH COLSPAN=\"2\">Prix public</TH><TH>Qté</TH></THEAD>\n<TBODY>";
     $ilivre = 1;
     foreach ( $livres as $livre ) {
+      
         $response .= '<TR><TD>'.$ilivre++.'.</TD>';
         $response .= '<TD>'.$livre->nom_complet.'</TD>';
         $response .= '<TD><I>'.$livre->titre."</I></TD>";
-        $response .= '<TD ALIGN="RIGHT" nowrap>'.sprintf("%0.2f", $livre->prix_achat).' '.$livre->monnaie.'</TD>';
-        $response .= '<TD ALIGN="RIGHT" nowrap>'.sprintf("%0.2f", $livre->prix_public).' '.$livre->monnaie.'</TD>';
-        $response .= '<TD ALIGN="RIGHT" nowrap>'.sprintf("%0.0f", $livre->prix_achat*$fact).' CHF</TD>';
-        $response .= '<TD ALIGN="RIGHT" nowrap> x '.$livre->quantite."</TD>";
+        $response .= '<TD ALIGN="CENTER" nowrap>'.sprintf("%0.2f", $livre->prix_achat).' '.$livre->monnaie.'</TD>';
+        $response .= '<TD ALIGN="CENTER" nowrap>'.sprintf("%0.2f", $livre->prix_public).' '.$livre->monnaie.'</TD>';
+        $response .= '<TD ALIGN="CENTER" nowrap>'.sprintf("%0.0f", $livre->prix_public*$fact).' '.$other_currency.'</TD>';
+        $response .= '<TD ALIGN="CENTER" nowrap> x '.$livre->quantite."</TD>";
         $response .= "</TR>\n";
     }
     $response .= "</TBODY></TABLE>";
