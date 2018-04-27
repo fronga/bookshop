@@ -4,8 +4,8 @@
   // Call with: usort($array, build_sorter('key','order'));
   function build_sorter($key,$order) {
     return function ($a, $b) use ($key,$order) {
-      if ( !$order ) return strnatcmp($a->$key, $b->$key);
-      else return strnatcmp($b->$key, $a->$key);
+      if ( !$order ) return strnatcasecmp($a->$key, $b->$key);
+      else return strnatcasecmp($b->$key, $a->$key);
     };
   }
   $views = array("auteurs", "livres", "commandes");  
