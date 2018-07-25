@@ -3,6 +3,7 @@
 $(function () {
   getAuthors();
   getAuthorBooks();
+  $('.remove').addClass("disabled")
 });
 
 function getAuthors(element) {
@@ -91,11 +92,15 @@ function clone(count) {
       }, this);
     });
   cloneIndex++;
+  $('.remove').removeClass("disabled")
 }
 
 function remove() {
   $("#clonedInput" + (cloneIndex - 1)).remove();
   cloneIndex--;
+  if (cloneIndex == 1) {
+    $('.remove').addClass("disabled");
+  }
 }
 
 function validateForm() {

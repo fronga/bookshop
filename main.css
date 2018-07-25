@@ -43,6 +43,8 @@ p.accordion { margin:0pt; padding-bottom: 10pt; }
 /* p:nth-child(odd) {color:lightblue; font-weight:bold}
 p:nth-child(even) {color:darkblue;} */
 
+/* Buttons */
+button.disabled { pointer-events: none; color: grey;}
 
 /* Form styles */
 table.form { padding-bottom: 20px; }
