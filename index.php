@@ -72,7 +72,8 @@ if ($view == "commandes") {
 </script>';
   } else {
     echo '<DIV class="body">';
-    echo '<TABLE class="list">';  
+    echo '<input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names..">';
+    echo '<TABLE class="list" id="list">';  
     include "view_".$view.".php";
     echo '</TABLE>';
     echo '</DIV>';
